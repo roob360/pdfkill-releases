@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unduh PDFKill</title>
+<style>
+  :root { --bg:#f5f5f7; --fg:#1d1d1f; --mute:#6e6e73; --card:#fff; --line:#d2d2d7; --accent:#0071e3; --accent-fg:#fff; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#000; --fg:#f5f5f7; --mute:#a1a1a6; --card:#1c1c1e; --line:#38383a; --accent:#2997ff; --accent-fg:#000; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width: 680px; margin: 0 auto; padding: 56px 16px 72px; }
+  h1 { font-size: 2.2rem; margin: 0 0 8px; }
+  h2 { font-size: 1.1rem; margin: 32px 0 8px; }
+  p, li { color: var(--mute); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-top: 24px; }
+  .btn { display:inline-block; background:var(--accent); color:var(--accent-fg); padding:12px 22px; border-radius:980px; text-decoration:none; font-weight:600; }
+  .btn[aria-disabled="true"] { opacity:.5; pointer-events:none; }
+  .meta { font-size:.9rem; margin-top:10px; }
+  pre { white-space: pre-wrap; margin: 12px 0 0; font: inherit; color: var(--mute); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>PDFKill</h1>
+  <p>Pembaca dan penyunting PDF untuk Windows dengan mode Baca, Edit, dan Engineering untuk takeoff gambar kerja.</p>
+
+  <div class="card">
+    <a id="dl" class="btn" href="https://github.com/roob360/pdfkill-releases/releases/latest" aria-disabled="false">Unduh untuk Windows</a>
+    <div id="meta" class="meta">Memuat versi terbaru…</div>
+    <pre id="notes"></pre>
+  </div>
+
+  <h2>Jika Windows menampilkan peringatan</h2>
+  <p>Installer belum bertanda tangan kode, sehingga SmartScreen dapat menampilkan "Windows protected your PC". Pilih <b>More info</b>, lalu <b>Run anyway</b>.</p>
+
+  <h2>Pembaruan</h2>
+  <p>PDFKill memeriksa versi baru saat dibuka dan menanyakan dulu sebelum memasang. Bisa dimatikan di Pengaturan.</p>
+
+  <h2>Privasi</h2>
+  <p>Dokumen Anda diproses di komputer sendiri. Satu-satunya akses jaringan adalah pemeriksaan versi baru ke GitHub.</p>
+
+  <p class="meta">Berlisensi Apache-2.0. Daftar pustaka pihak ketiga ada di dalam aplikasi.</p>
+</main>
+<script>
+  (async () => {
+    const meta = document.getElementById('meta'), notes = document.getElementById('notes'), dl = document.getElementById('dl');
+    try {
+      const r = await fetch('https://api.github.com/repos/roob360/pdfkill-releases/releases/latest');
+      if (!r.ok) throw new Error(r.status);
+      const j = await r.json();
+      const exe = (j.assets || []).find((a) => /\.exe$/i.test(a.name));
+      if (exe) dl.href = exe.browser_download_url;
+      const mb = exe ? ` (${(exe.size / 1048576).toFixed(1)} MB)` : '';
+      meta.textContent = `Versi ${String(j.tag_name).replace(/^v/, '')}${mb}, dirilis ${new Date(j.published_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}`;
+      notes.textContent = (j.body || '').trim();
+    } catch {
+      meta.textContent = 'Belum ada rilis, atau versi terbaru tidak bisa dimuat. Tombol mengarah ke halaman rilis.';
+    }
+  })();
+</script>
+</body>
+</html>
