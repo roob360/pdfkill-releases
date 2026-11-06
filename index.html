@@ -5,204 +5,299 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PDFKill: PDF dan takeoff gambar kerja</title>
 <meta name="description" content="PDFKill adalah pembaca dan penyunting PDF untuk Windows dengan mode Baca, Edit, dan Engineering untuk takeoff gambar kerja. Offline, ringan, gratis.">
-<meta name="theme-color" content="#0a0b26">
+<meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" as="image" href="img/engineering-light.webp" media="(prefers-color-scheme: light)">
+<link rel="preload" as="image" href="img/engineering-dark.webp" media="(prefers-color-scheme: dark)">
 <meta property="og:title" content="PDFKill">
 <meta property="og:description" content="Baca, edit, dan ukur gambar kerja di PDF. Semua di komputer Anda, tanpa unggah.">
+<meta property="og:image" content="img/engineering-light.webp">
 <style>
+/* Token: sistem desain macOS (tokens.json). Terang = tema pertama. */
 :root {
-  --bg: #f6f7fb; --surface: #ffffff; --surface-2: #eef0f8; --fg: #14163a; --mute: #565a7a; --line: #d9dcec;
-  --brand: #3b3fd8; --brand-hi: #2a2eb8; --on-brand: #ffffff; --accent: #0a7fa6; --ok: #15803d;
-  --hero-1: #e4e6ff; --shadow: 0 18px 50px -20px rgba(30, 34, 120, .35);
-  --paper: #ffffff; --ink: #1b1e4b; --measure: #d13a22;
-  --r: 16px; --gut: 16px; --ease: cubic-bezier(.2, .7, .2, 1);
+  --window-background: #ffffff; --label-primary: #000000d9; --label-secondary: #00000080; --label-tertiary: #00000040;
+  --label-vibrant: #363636; --fill-primary: #0000001a; --fill-secondary: #00000014; --fill-tertiary: #0000000d;
+  --accent-blue: #0088ff; --accent-green: #34c759; --accent-orange: #ff8d28; --accent-red: #ff383c; --accent-teal: #00c3d0;
+  --on-prominent: #ffffff; --bordered-fill: #00000014; --tinted-fill: #0088ff29;
+  --material-regular: #ecececa1; --material-thin: #ececec80; --sidebar: #fafafacc;
+  --sep: #00000012; --titlebar-border: #3c3c431f;
+  --tl-close: #fa9891; --tl-min: #ffda66; --tl-max: #ade392;
+  --shadow-window: 0px 0px 1px 0px #000000cc, 0px 36px 100px 0px #00000066;
+  --shadow-glass: 1.25px 0 0 -.75px #dbdbdb, -1.25px 0 0 -.75px #dbdbdb, 0 0 .3px .3px #dbdbdb, 0 2px .25px -1.2px #fff, 0 4px 8px -4px #27272766, 0 18px 46px 0 #00000040;
+  --ink: #1b1e4b;
+  --radius-12: 12px; --radius-16: 16px; --radius-20: 20px; --capsule: 999px;
+  --d-fast: 150ms; --d-base: 250ms; --d-slow: 400ms;
+  --e-std: cubic-bezier(.4, 0, .2, 1); --e-out: cubic-bezier(0, 0, .2, 1); --e-in: cubic-bezier(.4, 0, 1, 1);
+  --font: "SF Pro", -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, sans-serif;
+  --gut: 20px;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #090a22; --surface: #121438; --surface-2: #181b48; --fg: #f1f2ff; --mute: #a7abd1; --line: #272b63;
-    --brand: #7b83ff; --brand-hi: #9aa0ff; --on-brand: #0a0b26; --accent: #4cc3e8; --ok: #4ade80;
-    --hero-1: #1c2070; --shadow: 0 24px 60px -24px rgba(0, 0, 0, .8);
-    --paper: #0e1030; --ink: #aab0ff; --measure: #ff8a6b;
+    --window-background: #1e1e1e; --label-primary: #ffffff; --label-secondary: #ffffff8c; --label-tertiary: #ffffff40;
+    --label-vibrant: #fffffff5; --fill-primary: #ffffff1a; --fill-secondary: #ffffff14; --fill-tertiary: #ffffff0d;
+    --accent-blue: #0091ff; --accent-green: #30d158; --accent-orange: #ff9230; --accent-red: #ff4245; --accent-teal: #00d2e0;
+    --bordered-fill: #ffffff12; --tinted-fill: #0091ff3d; --material-regular: #2c2c2c9c; --material-thin: #2929297d; --sidebar: #0c0c0cd9;
+    --sep: #ffffff14;
+    --shadow-glass: -1.25px 0 0 -.75px #a6a6a6, 1.25px 0 0 -.75px #a6a6a6, 0 2px .2px -1.2px #ffffff33, 0 0 .3px .3px #a6a6a6cc, 0 18px 48px 0 #00000073;
+    --ink: #aab0ff;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #090a22; --surface: #121438; --surface-2: #181b48; --fg: #f1f2ff; --mute: #a7abd1; --line: #272b63;
-  --brand: #7b83ff; --brand-hi: #9aa0ff; --on-brand: #0a0b26; --accent: #4cc3e8; --ok: #4ade80;
-  --hero-1: #1c2070; --shadow: 0 24px 60px -24px rgba(0, 0, 0, .8);
-  --paper: #0e1030; --ink: #aab0ff; --measure: #ff8a6b;
+  --window-background: #1e1e1e; --label-primary: #ffffff; --label-secondary: #ffffff8c; --label-tertiary: #ffffff40;
+  --label-vibrant: #fffffff5; --fill-primary: #ffffff1a; --fill-secondary: #ffffff14; --fill-tertiary: #ffffff0d;
+  --accent-blue: #0091ff; --accent-green: #30d158; --accent-orange: #ff9230; --accent-red: #ff4245; --accent-teal: #00d2e0;
+  --bordered-fill: #ffffff12; --tinted-fill: #0091ff3d; --material-regular: #2c2c2c9c; --material-thin: #2929297d; --sidebar: #0c0c0cd9;
+  --sep: #ffffff14;
+  --shadow-glass: -1.25px 0 0 -.75px #a6a6a6, 1.25px 0 0 -.75px #a6a6a6, 0 2px .2px -1.2px #ffffff33, 0 0 .3px .3px #a6a6a6cc, 0 18px 48px 0 #00000073;
+  --ink: #aab0ff;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
-img, svg { max-width: 100%; display: block; }
-a { color: var(--brand); text-underline-offset: 3px; }
-a:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid var(--brand); outline-offset: 3px; border-radius: 8px; }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 0 var(--gut); }
-.skip { position: absolute; left: -999px; top: 8px; background: var(--brand); color: var(--on-brand); padding: 8px 14px; border-radius: 8px; z-index: 20; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+body { margin: 0; background: var(--window-background); color: var(--label-vibrant); font: 500 16px/1.6 var(--font); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent-blue); outline-offset: 3px; border-radius: 8px; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 var(--gut); }
+.skip { position: absolute; left: -999px; top: 8px; z-index: 50; background: var(--accent-blue); color: var(--on-prominent); padding: 8px 14px; border-radius: var(--capsule); }
 .skip:focus { left: 8px; }
+.glass { background: var(--material-regular); -webkit-backdrop-filter: blur(30px) saturate(1.8); backdrop-filter: blur(30px) saturate(1.8); }
+.only-d { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .only-l { display: none; } :root:not([data-theme="light"]) .only-d { display: block; } }
+:root[data-theme="dark"] .only-l { display: none; } :root[data-theme="dark"] .only-d { display: block; }
 
-header.nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
-.nav .wrap { display: flex; align-items: center; gap: 20px; height: 60px; }
-.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.05rem; color: var(--fg); text-decoration: none; }
+/* nav: toolbar kaca kapsul */
+.nav { position: sticky; top: 12px; z-index: 30; padding: 0 var(--gut); }
+.nav .bar { max-width: 1160px; margin: 0 auto; height: 52px; border-radius: var(--capsule); box-shadow: var(--shadow-glass); display: flex; align-items: center; gap: 6px; padding: 0 8px 0 10px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; text-decoration: none; color: var(--label-primary); padding-right: 6px; }
 .brand img { width: 30px; height: 30px; border-radius: 8px; }
-.nav nav { margin-left: auto; display: flex; gap: 4px; align-items: center; }
-.nav nav a { color: var(--mute); text-decoration: none; font-weight: 500; font-size: .95rem; padding: 10px 12px; border-radius: 10px; min-height: 44px; display: inline-flex; align-items: center; transition: color .18s, background .18s; }
-.nav nav a:hover { color: var(--fg); background: var(--surface-2); }
-.theme { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; display: grid; place-items: center; }
-.theme:hover { background: var(--surface-2); }
-.theme svg { width: 20px; height: 20px; }
+.nav nav { margin-left: auto; display: flex; align-items: center; gap: 2px; }
+.nav nav a:not(.cta-s) { text-decoration: none; font-size: 14px; font-weight: 500; padding: 0 14px; height: 36px; display: inline-flex; align-items: center; border-radius: var(--capsule); color: var(--label-vibrant); transition: background var(--d-fast) var(--e-std); }
+.nav nav a:not(.cta-s):hover { background: var(--fill-secondary); }
+.cta-s { height: 36px; padding: 0 18px; border-radius: var(--capsule); background: var(--accent-blue); color: var(--on-prominent); font-weight: 600; font-size: 14px; text-decoration: none; display: inline-flex; align-items: center; margin-left: 4px; transition: filter var(--d-fast) var(--e-std), transform var(--d-fast) var(--e-std); }
+.cta-s:hover { filter: brightness(1.08); }
+.cta-s:active, .btn:active { transform: scale(.97); }
+.theme { width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; color: var(--label-vibrant); cursor: pointer; display: grid; place-items: center; transition: background var(--d-fast); }
+.theme:hover { background: var(--fill-secondary); }
+.theme svg { width: 18px; height: 18px; }
+@media (max-width: 760px) { .nav nav a.hide-m { display: none; } }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 26px; border-radius: 14px; font-weight: 650; font-size: 1.02rem; text-decoration: none; cursor: pointer; border: 1px solid transparent; transition: transform .18s var(--ease), background .18s, box-shadow .18s; }
-.btn svg { width: 20px; height: 20px; }
-.btn.primary { background: var(--brand); color: var(--on-brand); box-shadow: 0 10px 26px -10px var(--brand); }
-.btn.primary:hover { background: var(--brand-hi); transform: translateY(-1px); }
-.btn.ghost { background: var(--surface); color: var(--fg); border-color: var(--line); }
-.btn.ghost:hover { background: var(--surface-2); }
+/* tombol */
+.btn { height: 44px; padding: 0 26px; border-radius: var(--capsule); font: 600 15px/1 var(--font); display: inline-flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; cursor: pointer; border: 0; transition: filter var(--d-fast) var(--e-std), transform var(--d-fast) var(--e-std), background var(--d-fast); }
+.btn svg { width: 18px; height: 18px; }
+.btn.def { background: var(--accent-blue); color: var(--on-prominent); box-shadow: 0 10px 28px -12px var(--accent-blue); }
+.btn.def:hover { filter: brightness(1.08); }
+.btn.bor { background: var(--bordered-fill); color: var(--label-vibrant); }
+.btn.bor:hover { background: var(--fill-primary); }
 
-.hero { background: radial-gradient(900px 420px at 80% -10%, var(--hero-1), transparent 70%), var(--bg); padding: 56px 0 40px; overflow: hidden; }
-.hero .wrap { display: grid; gap: 44px; align-items: center; }
-.eyebrow { display: inline-flex; gap: 8px; align-items: center; font-size: .85rem; font-weight: 600; color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent); padding: 6px 12px; border-radius: 99px; }
-h1 { font-size: clamp(2.2rem, 6.2vw, 4rem); line-height: 1.05; letter-spacing: -.03em; margin: 16px 0 16px; font-weight: 800; }
-h1 em { font-style: normal; color: var(--brand); }
-.lead { font-size: clamp(1.05rem, 2.2vw, 1.25rem); color: var(--mute); max-width: 56ch; margin: 0 0 28px; }
-.cta { display: flex; flex-wrap: wrap; gap: 12px; }
-.meta { margin-top: 14px; font-size: .9rem; color: var(--mute); }
+/* hero */
+.hero { padding: 64px 0 0; text-align: center; position: relative; }
+.hero::before { content: ""; position: absolute; inset: -120px 0 auto; height: 620px; background: radial-gradient(700px 320px at 50% 0, color-mix(in srgb, var(--accent-blue) 16%, transparent), transparent 70%); pointer-events: none; }
+.pill { display: inline-flex; align-items: center; gap: 8px; height: 28px; padding: 0 12px; border-radius: var(--capsule); background: var(--tinted-fill); color: var(--accent-blue); font-size: 13px; font-weight: 600; }
+.pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-green); animation: pulse 2s infinite; }
+h1 { font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: 1.06; letter-spacing: -.035em; margin: 20px auto 18px; max-width: 20ch; text-wrap: balance; font-weight: 800; color: var(--label-primary); }
+h1 span { background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lead { font-size: clamp(1.05rem, 2.3vw, 1.3rem); max-width: 60ch; margin: 0 auto 28px; color: var(--label-vibrant); opacity: .85; }
+.ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.meta { margin: 14px 0 0; font-size: 14px; color: var(--label-secondary); min-height: 22px; }
 
-.window { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: var(--shadow); overflow: hidden; }
-.window .bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--surface-2); }
-.window .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
-.window .bar b { margin-left: 8px; font-size: .8rem; font-weight: 600; color: var(--mute); }
-.window .bar .chip { margin-left: auto; font-size: .72rem; font-weight: 700; color: var(--brand); background: color-mix(in srgb, var(--brand) 14%, transparent); padding: 3px 10px; border-radius: 99px; }
-.window .body { display: grid; grid-template-columns: 1fr; }
-.plan { padding: 10px; background: var(--paper); }
-.side { display: none; border-left: 1px solid var(--line); padding: 14px; font-size: .82rem; }
-.side h4 { margin: 0 0 8px; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--mute); }
-.side .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--line); font-variant-numeric: tabular-nums; }
-.side .row b { font-weight: 650; }
-.sw { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 8px; vertical-align: -1px; }
+.stage { margin-top: 48px; perspective: 1600px; }
+.win { border-radius: var(--radius-16); overflow: hidden; background: var(--window-background); box-shadow: var(--shadow-window); position: relative; transform-origin: 50% 0; will-change: transform; border: 1px solid var(--sep); }
+.win .tb { height: 33px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 1px solid var(--titlebar-border); background: var(--sidebar); }
+.win .tb i { width: 12px; height: 12px; border-radius: 50%; }
+.win .tb i:nth-child(1) { background: var(--tl-close); } .win .tb i:nth-child(2) { background: var(--tl-min); } .win .tb i:nth-child(3) { background: var(--tl-max); }
+.win .tb b { margin: 0 auto; transform: translateX(-24px); font-size: 12.5px; font-weight: 600; color: var(--label-secondary); }
+.shot { position: relative; }
+.win img { width: 100%; height: auto; }
+/* pin motion di atas screenshot asli */
+.pin { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 8px; opacity: 0; }
+.pin .dot { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 3px #fff; position: relative; flex: none; }
+.pin .dot::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--c); animation: ring 2s var(--e-out) infinite; }
+.pin .tag { position: absolute; left: 22px; top: 50%; transform: translateY(-50%); white-space: nowrap; height: 30px; padding: 0 12px; border-radius: var(--capsule); display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 650; color: var(--label-primary); box-shadow: var(--shadow-glass); }
+.pin .tag b { color: var(--c); font-variant-numeric: tabular-nums; }
+.js .shot.in .pin { animation: pinIn var(--d-slow) var(--e-out) forwards; animation-delay: var(--dl); }
+.shot:not(.js-wait) .pin { }
+@keyframes pinIn { from { opacity: 0; transform: translate(-50%, -30%) scale(.8); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes ring { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.2); opacity: 0; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@media (max-width: 700px) { .pin .tag { display: none; } .win .tb b { display: none; } .pin .dot { width: 9px; height: 9px; box-shadow: 0 0 0 2px #fff; } .pin .dot::after { inset: -3px; border-width: 1.5px; } }
 
-section { padding: 72px 0; }
-.sec-head { max-width: 62ch; margin-bottom: 36px; }
-.sec-head h2 { font-size: clamp(1.7rem, 4vw, 2.5rem); line-height: 1.15; letter-spacing: -.02em; margin: 0 0 12px; }
-.sec-head p { color: var(--mute); margin: 0; font-size: 1.08rem; }
-.kick { font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+/* section */
+section { padding: 88px 0; }
+.head { max-width: 62ch; margin: 0 auto 44px; text-align: center; }
+.kick { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent-blue); margin-bottom: 10px; }
+.head h2 { text-wrap: balance; font-size: clamp(1.8rem, 4.4vw, 2.9rem); line-height: 1.12; letter-spacing: -.025em; margin: 0 0 14px; color: var(--label-primary); font-weight: 800; }
+.head p { margin: 0; font-size: 1.1rem; opacity: .85; }
+.band { background: var(--fill-tertiary); }
+
+/* segmented control */
+.seg { display: inline-flex; padding: 4px; border-radius: var(--capsule); background: var(--fill-secondary); gap: 2px; margin: 0 auto 28px; }
+.seg button { height: 36px; padding: 0 22px; border-radius: var(--capsule); border: 0; background: transparent; color: var(--label-vibrant); font: 600 14px/1 var(--font); cursor: pointer; transition: background var(--d-base) var(--e-std), color var(--d-base), box-shadow var(--d-base); }
+.seg button[aria-selected="true"] { background: var(--window-background); color: var(--label-primary); box-shadow: 0 1px 4px #00000033; }
+.modes { display: grid; gap: 28px; align-items: center; }
+@media (min-width: 960px) { .modes { grid-template-columns: .8fr 1.5fr; } }
+.mode-copy h3 { font-size: 1.7rem; letter-spacing: -.02em; margin: 0 0 10px; color: var(--label-primary); }
+.mode-copy p { margin: 0 0 16px; opacity: .88; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { height: 28px; padding: 0 12px; border-radius: var(--capsule); background: var(--tinted-fill); color: var(--accent-blue); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; }
+kbd { font: 600 12px var(--font); background: var(--fill-secondary); border-radius: 6px; padding: 2px 8px; }
+.mode-shots { position: relative; }
+.mode-shots .win { box-shadow: var(--shadow-window); }
+.mode-shots .layer { transition: opacity var(--d-slow) var(--e-std), transform var(--d-slow) var(--e-std); }
+.mode-shots .layer:not(.on) { opacity: 0; transform: scale(.985); position: absolute; inset: 0; pointer-events: none; }
+.mode-shots .layer.win:not(.on) { position: absolute; }
+.mode-copy .txt { display: none; } .mode-copy .txt.on { display: block; animation: fadeUp var(--d-slow) var(--e-out); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+/* cara kerja: motion graphic */
+.how { display: grid; gap: 32px; align-items: center; }
+@media (min-width: 960px) { .how { grid-template-columns: 1fr 1.15fr; } }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.steps li { position: relative; border-radius: var(--radius-16); padding: 18px 20px 18px 64px; background: var(--window-background); border: 1px solid var(--sep); cursor: pointer; transition: box-shadow var(--d-base) var(--e-std), transform var(--d-base) var(--e-std), border-color var(--d-base); }
+.steps li::before { content: attr(data-n); position: absolute; left: 18px; top: 18px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--fill-secondary); color: var(--label-vibrant); transition: background var(--d-base), color var(--d-base); }
+.steps li.on { box-shadow: var(--shadow-glass); border-color: transparent; transform: translateX(6px); }
+.steps li.on::before { background: var(--accent-blue); color: var(--on-prominent); }
+.steps b { display: block; color: var(--label-primary); font-size: 17px; }
+.steps span { font-size: 15px; opacity: .85; }
+.steps li .prog { position: absolute; left: 20px; right: 20px; bottom: 0; height: 3px; border-radius: 3px; background: transparent; overflow: hidden; }
+.steps li .prog::after { content: ""; display: block; height: 100%; width: 0; background: var(--accent-blue); }
+.steps li.on .prog::after { animation: fill var(--dur, 3600ms) linear forwards; }
+@keyframes fill { to { width: 100%; } }
+.canvas { background: #ffffff; border-radius: var(--radius-16); box-shadow: var(--shadow-window); border: 1px solid var(--sep); overflow: hidden; position: relative; }
+.canvas svg { width: 100%; height: auto; }
+.canvas .g { stroke: #1b1e4b; fill: none; stroke-width: 2; }
+.canvas .tx { font: 700 13px var(--font); fill: #1b1e4b; }
+.draw { stroke-dasharray: var(--len, 500); stroke-dashoffset: var(--len, 500); }
+[data-step="0"] .a-scale, [data-step="1"] .a-scale, [data-step="2"] .a-scale, [data-step="3"] .a-scale { opacity: 1; }
+.a-scale .draw { animation: dash 1.2s var(--e-out) forwards; }
+@keyframes dash { to { stroke-dashoffset: 0; } }
+.a-area, .a-count, .a-sum { opacity: 0; transition: opacity var(--d-slow) var(--e-std); }
+.a-area .fill { fill: #0a84ff; fill-opacity: 0; transition: fill-opacity var(--d-slow) .9s; }
+[data-step="1"] .a-area, [data-step="2"] .a-area, [data-step="3"] .a-area { opacity: 1; }
+[data-step="1"] .a-area .draw { animation: dash 1.1s var(--e-out) forwards; }
+[data-step="1"] .a-area .fill, [data-step="2"] .a-area .fill, [data-step="3"] .a-area .fill { fill-opacity: .22; }
+[data-step="2"] .a-area .draw, [data-step="3"] .a-area .draw { stroke-dashoffset: 0; }
+[data-step="2"] .a-count, [data-step="3"] .a-count { opacity: 1; }
+.a-count circle { fill: #ff9f0a; stroke: #fff; stroke-width: 2; transform-box: fill-box; transform-origin: center; transform: scale(0); }
+[data-step="2"] .a-count circle { animation: pop var(--d-slow) var(--e-out) forwards; animation-delay: calc(var(--i) * 130ms); }
+[data-step="3"] .a-count circle { transform: scale(1); }
+@keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.35); } 100% { transform: scale(1); } }
+.sum { position: absolute; right: 14px; top: 14px; width: 210px; border-radius: 14px; padding: 12px 14px; box-shadow: var(--shadow-glass); opacity: 0; transform: translateX(16px); transition: opacity var(--d-slow) var(--e-out), transform var(--d-slow) var(--e-out); background: #f6f6f8f2; -webkit-backdrop-filter: blur(24px) saturate(1.8); backdrop-filter: blur(24px) saturate(1.8); color: #000000d9; font-size: 12.5px; }
+.sum h4 { margin: 0 0 6px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #00000080; }
+.sum div { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #0000001a; font-variant-numeric: tabular-nums; }
+.sum div:last-child { border: 0; }
+.sum i { width: 9px; height: 9px; border-radius: 3px; display: inline-block; margin-right: 7px; }
+[data-step="3"] .sum { opacity: 1; transform: none; }
+.cap-badge { position: absolute; left: 14px; top: 14px; height: 28px; padding: 0 12px; border-radius: var(--capsule); display: inline-flex; align-items: center; font-size: 12.5px; font-weight: 650; background: #ecececa1; color: #000000d9; box-shadow: var(--shadow-glass); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); }
+
+/* kartu */
 .grid { display: grid; gap: 16px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 24px; transition: transform .2s var(--ease), border-color .2s, box-shadow .2s; }
-.card:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brand) 55%, var(--line)); box-shadow: var(--shadow); }
-.card h3 { margin: 14px 0 8px; font-size: 1.15rem; }
-.card p { margin: 0; color: var(--mute); }
-.ico { width: 44px; height: 44px; border-radius: 12px; background: color-mix(in srgb, var(--brand) 14%, transparent); color: var(--brand); display: grid; place-items: center; }
+@media (min-width: 700px) { .g3 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { .g3 { grid-template-columns: repeat(3, 1fr); } }
+.card { border-radius: var(--radius-20); padding: 26px; background: var(--window-background); border: 1px solid var(--sep); transition: transform var(--d-base) var(--e-std), box-shadow var(--d-base) var(--e-std); }
+.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-glass); }
+.ico { width: 44px; height: 44px; border-radius: 12px; background: var(--tinted-fill); color: var(--accent-blue); display: grid; place-items: center; transition: transform var(--d-base) var(--e-out); }
+.card:hover .ico { transform: scale(1.08) rotate(-4deg); }
 .ico svg { width: 24px; height: 24px; }
-.mode .keys { margin-top: 14px; font-size: .82rem; color: var(--mute); }
-kbd { font: inherit; font-size: .8rem; font-weight: 600; background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 1px 7px; }
-.band { background: var(--surface-2); border-block: 1px solid var(--line); }
-.feat { display: flex; gap: 14px; align-items: flex-start; padding: 18px 0; border-bottom: 1px solid var(--line); }
-.feat:last-child { border-bottom: 0; }
-.feat .ico { flex: none; }
-.feat h3 { margin: 0 0 4px; font-size: 1.05rem; }
-.feat p { margin: 0; color: var(--mute); }
-.two { display: grid; gap: 40px; align-items: start; }
-.stat { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
-.stat div { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; }
-.stat b { display: block; font-size: 1.9rem; letter-spacing: -.02em; color: var(--brand); }
-.stat span { color: var(--mute); font-size: .92rem; }
-ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: s; }
-ol.steps li { counter-increment: s; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 18px 20px 18px 64px; position: relative; }
-ol.steps li::before { content: counter(s); position: absolute; left: 18px; top: 16px; width: 32px; height: 32px; border-radius: 10px; background: var(--brand); color: var(--on-brand); font-weight: 700; display: grid; place-items: center; }
-ol.steps b.t { display: block; }
-ol.steps span { color: var(--mute); }
-details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 20px; margin-bottom: 10px; }
-summary { cursor: pointer; font-weight: 600; padding: 16px 0; min-height: 44px; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
-summary::-webkit-details-marker { display: none; }
-summary::after { content: "+"; font-weight: 400; font-size: 1.4rem; line-height: 1; color: var(--brand); transition: transform .2s; }
-details[open] summary::after { transform: rotate(45deg); }
-details p { margin: 0 0 16px; color: var(--mute); }
-.final { text-align: center; }
-.final .cta { justify-content: center; }
-footer { border-top: 1px solid var(--line); padding: 32px 0 44px; color: var(--mute); font-size: .9rem; }
-footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; }
-footer a { color: var(--mute); }
+.card h3 { margin: 16px 0 6px; font-size: 1.12rem; color: var(--label-primary); }
+.card p { margin: 0; font-size: 15px; opacity: .85; }
 
-@media (min-width: 640px) { :root { --gut: 24px; } .grid.c3 { grid-template-columns: 1fr 1fr; } }
-@media (min-width: 900px) {
-  .hero .wrap { grid-template-columns: 1fr 1.05fr; }
-  .window .body { grid-template-columns: 1fr 190px; }
-  .side { display: block; }
-  .grid.c3 { grid-template-columns: repeat(3, 1fr); }
-  .two { grid-template-columns: 1fr 1fr; }
+/* .pkp */
+.pkp { display: grid; gap: 36px; align-items: center; }
+@media (min-width: 960px) { .pkp { grid-template-columns: 1fr 1fr; } }
+.fly { position: relative; height: 300px; border-radius: var(--radius-20); background: var(--window-background); border: 1px solid var(--sep); overflow: hidden; box-shadow: var(--shadow-glass); }
+.fly .file { position: absolute; width: 132px; padding: 14px; border-radius: 14px; font-weight: 700; font-size: 14px; display: flex; flex-direction: column; gap: 6px; box-shadow: var(--shadow-glass); background: var(--material-regular); -webkit-backdrop-filter: blur(24px); backdrop-filter: blur(24px); color: var(--label-primary); }
+.fly .file small { font-weight: 500; font-size: 12px; color: var(--label-secondary); }
+.fly .file svg { width: 30px; height: 30px; }
+.fa { left: 8%; top: 18%; animation: fa 6s var(--e-std) infinite; }
+.fb { left: 8%; bottom: 14%; animation: fb 6s var(--e-std) infinite; }
+.fc { left: 50%; top: 50%; transform: translate(-50%, -50%) scale(.6); opacity: 0; width: 170px; animation: fc 6s var(--e-std) infinite; background: var(--accent-blue) !important; color: var(--on-prominent) !important; }
+.fc small { color: #ffffffd0 !important; }
+@keyframes fa { 0%, 20% { transform: none; opacity: 1; } 42%, 90% { transform: translate(125%, 60%) scale(.45); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes fb { 0%, 20% { transform: none; opacity: 1; } 42%, 90% { transform: translate(125%, -60%) scale(.45); opacity: 0; } 100% { transform: none; opacity: 1; } }
+@keyframes fc { 0%, 34% { opacity: 0; transform: translate(-50%, -50%) scale(.6); } 46% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 52%, 88% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 96%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(.9); } }
+.menu-card { display: grid; gap: 24px; align-items: center; margin-top: 36px; }
+@media (min-width: 960px) { .menu-card { grid-template-columns: 340px 1fr; } }
+.menu-img img { width: 100%; height: auto; }
+.menu-img { border-radius: var(--radius-16); overflow: hidden; box-shadow: var(--shadow-window); border: 1px solid var(--sep); max-width: 360px; }
+
+/* angka */
+.stats { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+@media (min-width: 800px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+.stat { border-radius: var(--radius-16); padding: 22px; background: var(--window-background); border: 1px solid var(--sep); }
+.stat b { display: block; font-size: 2.2rem; letter-spacing: -.03em; color: var(--accent-blue); font-variant-numeric: tabular-nums; }
+.stat span { font-size: 14px; opacity: .85; }
+
+/* pasang */
+.inst { display: grid; gap: 28px; align-items: center; }
+@media (min-width: 960px) { .inst { grid-template-columns: 1fr 1fr; } }
+ol.s2 { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; counter-reset: s; }
+ol.s2 li { counter-increment: s; border-radius: var(--radius-16); padding: 18px 20px 18px 64px; position: relative; background: var(--window-background); border: 1px solid var(--sep); }
+ol.s2 li::before { content: counter(s); position: absolute; left: 18px; top: 18px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--accent-blue); color: var(--on-prominent); }
+ol.s2 b.t { display: block; color: var(--label-primary); }
+ol.s2 span { font-size: 15px; opacity: .88; }
+
+details { background: var(--window-background); border: 1px solid var(--sep); border-radius: var(--radius-16); padding: 0 20px; margin-bottom: 10px; transition: box-shadow var(--d-base); }
+details[open] { box-shadow: var(--shadow-glass); }
+summary { cursor: pointer; font-weight: 650; padding: 16px 0; min-height: 52px; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--label-primary); }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: ""; width: 20px; height: 20px; flex: none; background: currentColor; opacity: .55; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 4v12M4 10h12' stroke='black' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 4v12M4 10h12' stroke='black' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform var(--d-base) var(--e-std); }
+details[open] summary::after { transform: rotate(45deg); }
+details p { margin: 0 0 16px; font-size: 15px; opacity: .88; }
+.final { text-align: center; }
+footer { border-top: 1px solid var(--sep); padding: 30px 0 44px; font-size: 14px; color: var(--label-secondary); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; }
+
+/* reveal */
+.js .rv { opacity: 0; transform: translateY(24px); transition: opacity var(--d-slow) var(--e-out), transform var(--d-slow) var(--e-out); transition-delay: var(--rd, 0ms); }
+.js .rv.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  html { scroll-behavior: auto; }
+  .js .rv { opacity: 1; transform: none; }
+  .pin { opacity: 1; }
 }
-@media (max-width: 560px) { .nav nav a.hide-sm { display: none; } .hero { padding-top: 36px; } }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } html { scroll-behavior: auto; } .m-line { stroke-dashoffset: 0 !important; } }
-@keyframes draw { to { stroke-dashoffset: 0; } }
-.m-line { stroke-dasharray: 440; stroke-dashoffset: 440; animation: draw 1.4s .4s var(--ease) forwards; }
 </style>
 </head>
 <body>
 <a class="skip" href="#unduh">Lompat ke unduhan</a>
 
 <header class="nav">
-  <div class="wrap">
+  <div class="bar glass">
     <a class="brand" href="#atas"><img src="logo.svg" alt="" width="30" height="30">PDFKill</a>
     <nav aria-label="Utama">
-      <a class="hide-sm" href="#mode">Mode</a>
-      <a class="hide-sm" href="#engineering">Engineering</a>
-      <a class="hide-sm" href="#privasi">Privasi</a>
-      <a href="#unduh">Unduh</a>
-      <button class="theme" id="theme" type="button" aria-label="Ganti tema terang atau gelap">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-      </button>
+      <a class="hide-m" href="#mode">Mode</a>
+      <a class="hide-m" href="#kerja">Cara kerja</a>
+      <a class="hide-m" href="#pkp">Proyek .pkp</a>
+      <a class="hide-m" href="#faq">Tanya jawab</a>
+      <button class="theme" id="theme" type="button" aria-label="Ganti tema terang atau gelap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <a class="cta-s" href="#unduh">Unduh</a>
     </nav>
   </div>
 </header>
 
 <main id="atas">
-<section class="hero" aria-labelledby="judul">
+<section class="hero" style="padding-bottom:0">
   <div class="wrap">
-    <div>
-      <span class="eyebrow">Untuk Windows &middot; Gratis &middot; Offline</span>
-      <h1 id="judul">Baca PDF. Edit halaman. <em>Hitung gambar kerja.</em></h1>
-      <p class="lead">PDFKill adalah aplikasi PDF yang ringan dengan mode khusus Engineering: atur skala, ukur panjang dan luas, hitung elemen, lalu keluarkan rekap ke Excel. Semua berjalan di komputer Anda.</p>
-      <div class="cta">
-        <a id="dl" class="btn primary" href="https://github.com/roob360/pdfkill-releases/releases/latest">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 20h16"/></svg>
-          Unduh untuk Windows
-        </a>
-        <a class="btn ghost" href="#mode">Lihat fitur</a>
-      </div>
-      <p id="meta" class="meta">Memuat versi terbaru&hellip;</p>
+    <span class="pill rv"><i></i>Untuk Windows &middot; Gratis &middot; Offline</span>
+    <h1 class="rv" style="--rd:60ms">Baca PDF. Edit. <span>Hitung gambar kerja.</span></h1>
+    <p class="lead rv" style="--rd:120ms">PDFKill adalah aplikasi PDF yang ringan dengan mode Engineering: atur skala, ukur panjang dan luas, hitung elemen, lalu keluarkan rekap ke Excel. Semua berjalan di komputer Anda.</p>
+    <div class="ctas rv" style="--rd:180ms">
+      <a id="dl" class="btn def" href="https://github.com/roob360/pdfkill-releases/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 20h16"/></svg>Unduh untuk Windows</a>
+      <a class="btn bor" href="#kerja">Lihat cara kerjanya</a>
     </div>
+    <p id="meta" class="meta rv" style="--rd:220ms">Memuat versi terbaru&hellip;</p>
 
-    <div class="window" role="img" aria-label="Contoh tampilan mode Engineering: denah dengan garis ukur dan panel rekap item">
-      <div class="bar"><i></i><i></i><i></i><b>Denah-Lantai-1.pkp</b><span class="chip">Engineering</span></div>
-      <div class="body">
-        <div class="plan">
-          <svg viewBox="0 0 480 330" width="100%" aria-hidden="true">
-            <g fill="none" stroke="var(--ink)" stroke-width="2" opacity=".85">
-              <rect x="30" y="40" width="420" height="250"/>
-              <path d="M30 160h170M260 160h190M200 40v120M320 160v130M200 160v50"/>
-            </g>
-            <g fill="var(--ink)" opacity=".85">
-              <rect x="24" y="34" width="12" height="12"/><rect x="194" y="34" width="12" height="12"/><rect x="444" y="34" width="12" height="12"/>
-              <rect x="24" y="154" width="12" height="12"/><rect x="314" y="154" width="12" height="12"/><rect x="444" y="154" width="12" height="12"/>
-              <rect x="24" y="284" width="12" height="12"/><rect x="314" y="284" width="12" height="12"/><rect x="444" y="284" width="12" height="12"/>
-            </g>
-            <rect x="36" y="166" width="278" height="118" fill="var(--brand)" fill-opacity=".22" stroke="var(--brand)" stroke-width="2"/>
-            <text x="175" y="231" text-anchor="middle" font-size="15" font-weight="700" fill="var(--brand)">R. KELUARGA 35,6 m&#178;</text>
-            <path class="m-line" d="M30 22h420" stroke="var(--measure)" stroke-width="2.5" fill="none"/>
-            <text x="240" y="15" text-anchor="middle" font-size="13" font-weight="700" fill="var(--measure)">42,00 m</text>
-            <g fill="var(--measure)"><circle cx="30" cy="22" r="4"/><circle cx="450" cy="22" r="4"/></g>
-            <g font-size="11" font-weight="700" fill="var(--ink)" text-anchor="middle"><text x="30" y="318">A</text><text x="200" y="318">B</text><text x="320" y="318">C</text><text x="450" y="318">D</text></g>
-          </svg>
+    <div class="stage rv" style="--rd:260ms">
+      <div class="win" id="heroWin">
+        <div class="tb"><i></i><i></i><i></i><b>Denah-Lantai-1 &middot; Engineering</b></div>
+        <div class="shot" id="heroShot">
+          <img class="only-l" src="img/engineering-light.webp" width="1800" height="1125" alt="Mode Engineering PDFKill: denah dengan pengukuran dinding, luas lantai, dan hitungan kolom, serta panel rekap item di kanan">
+          <img class="only-d" src="img/engineering-dark.webp" width="1800" height="1125" alt="" aria-hidden="true">
+          <div class="pin" style="left:57.4%;top:44.2%;--c:#ff453a;--dl:900ms"><span class="dot"></span><span class="tag glass">Dinding <b>74,67 m</b></span></div>
+          <div class="pin" style="left:23.5%;top:61.6%;--c:#0a84ff;--dl:1500ms"><span class="dot"></span><span class="tag glass">Lantai <b>45,79 m&#178;</b></span></div>
+          <div class="pin" style="left:57.4%;top:76%;--c:#ff9f0a;--dl:2100ms"><span class="dot"></span><span class="tag glass">Kolom K1 <b>12 ea</b></span></div>
         </div>
-        <aside class="side" aria-hidden="true">
-          <h4>Rekap item</h4>
-          <div class="row"><span><i class="sw" style="background:var(--brand)"></i>Lantai</span><b>35,6 m&#178;</b></div>
-          <div class="row"><span><i class="sw" style="background:var(--measure)"></i>Dinding</span><b>42,0 m</b></div>
-          <div class="row"><span><i class="sw" style="background:var(--accent)"></i>Kolom K1</span><b>9 ea</b></div>
-          <div class="row"><span><i class="sw" style="background:var(--ok)"></i>Pintu</span><b>4 ea</b></div>
-          <h4 style="margin-top:16px">Skala</h4>
-          <div class="row"><span>Halaman 1</span><b>1 : 100</b></div>
-        </aside>
       </div>
     </div>
   </div>
@@ -210,87 +305,131 @@ footer a { color: var(--mute); }
 
 <section id="mode" aria-labelledby="h-mode">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="kick">Tiga mode</div>
-      <h2 id="h-mode">Satu aplikasi, sesuai pekerjaan Anda</h2>
-      <p>Pindah mode dari tombol logo di kiri atas atau dengan pintasan. Setiap dokumen mengingat modenya sendiri.</p>
-    </div>
-    <div class="grid c3">
-      <article class="card mode">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3>Baca</h3>
-        <p>Gulir mulus atau per halaman, zoom, thumbnail, tab dokumen, pencarian teks, bandingkan dua PDF, dan baca nyaring.</p>
-        <div class="keys"><kbd>Ctrl</kbd> + <kbd>1</kbd></div>
-      </article>
-      <article class="card mode">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></div>
-        <h3>Edit</h3>
-        <p>Gabung, ekstrak, putar, hapus, dan susun ulang halaman. Anotasi, formulir, tanda tangan, redaksi, kata sandi, dan kompres.</p>
-        <div class="keys"><kbd>Ctrl</kbd> + <kbd>2</kbd></div>
-      </article>
-      <article class="card mode">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></div>
-        <h3>Engineering</h3>
-        <p>Takeoff gambar kerja: skala, ukur, hitung, rekap, RAB, dan ekspor. Proyek tersimpan sebagai satu berkas <b>.pkp</b>.</p>
-        <div class="keys"><kbd>Ctrl</kbd> + <kbd>3</kbd></div>
-      </article>
+    <div class="head rv"><div class="kick">Tiga mode</div><h2 id="h-mode">Satu aplikasi, sesuai pekerjaan Anda</h2><p>Pindah mode dari tombol logo di kiri atas atau dengan pintasan. Setiap dokumen mengingat modenya sendiri.</p></div>
+    <div style="text-align:center" class="rv"><div class="seg" role="tablist" aria-label="Mode">
+      <button role="tab" aria-selected="false" data-m="baca" id="t-baca" aria-controls="p-mode">Baca</button>
+      <button role="tab" aria-selected="false" data-m="edit" id="t-edit" aria-controls="p-mode">Edit</button>
+      <button role="tab" aria-selected="true" data-m="engineering" id="t-engineering" aria-controls="p-mode">Engineering</button>
+    </div></div>
+    <div class="modes rv" id="p-mode" role="tabpanel">
+      <div class="mode-copy">
+        <div class="txt" data-m="baca"><h3>Baca</h3><p>Gulir mulus atau per halaman, zoom, thumbnail, tab dokumen, pencarian teks, bandingkan dua PDF, dan baca nyaring.</p><div class="chips"><span class="chip">Tab dokumen</span><span class="chip">Cari teks</span><span class="chip">Bandingkan</span><span class="chip">Baca nyaring</span></div><p style="margin-top:16px"><kbd>Ctrl</kbd> + <kbd>1</kbd></p></div>
+        <div class="txt" data-m="edit"><h3>Edit</h3><p>Gabung, ekstrak, putar, hapus, dan susun ulang halaman. Anotasi, formulir, tanda tangan, redaksi, kata sandi, dan kompres.</p><div class="chips"><span class="chip">Gabung dan pisah</span><span class="chip">Anotasi</span><span class="chip">Tanda tangan</span><span class="chip">Redaksi</span></div><p style="margin-top:16px"><kbd>Ctrl</kbd> + <kbd>2</kbd></p></div>
+        <div class="txt on" data-m="engineering"><h3>Engineering</h3><p>Takeoff gambar kerja: skala, ukur, hitung, rekap, RAB, dan ekspor. Cari simbol otomatis, deteksi grid, koordinat UTM, dan peta progres.</p><div class="chips"><span class="chip">Skala dan ukur</span><span class="chip">Cari simbol</span><span class="chip">OCR offline</span><span class="chip">RAB dan Excel</span></div><p style="margin-top:16px"><kbd>Ctrl</kbd> + <kbd>3</kbd></p></div>
+      </div>
+      <div class="mode-shots">
+        <div class="win layer" data-m="baca"><div class="tb"><i></i><i></i><i></i><b>Baca</b></div><img class="only-l" loading="lazy" src="img/baca-light.webp" width="1800" height="1125" alt="Mode Baca PDFKill dengan thumbnail halaman dan tampilan gambar kerja"><img class="only-d" loading="lazy" src="img/baca-dark.webp" width="1800" height="1125" alt="" aria-hidden="true"></div>
+        <div class="win layer" data-m="edit"><div class="tb"><i></i><i></i><i></i><b>Edit</b></div><img class="only-l" loading="lazy" src="img/edit-light.webp" width="1800" height="1125" alt="Mode Edit PDFKill dengan ribbon Halaman: simpan, gabung, ekstrak, putar, dan susun"><img class="only-d" loading="lazy" src="img/edit-dark.webp" width="1800" height="1125" alt="" aria-hidden="true"></div>
+        <div class="win layer on" data-m="engineering"><div class="tb"><i></i><i></i><i></i><b>Engineering</b></div><img class="only-l" loading="lazy" src="img/engineering-light.webp" width="1800" height="1125" alt="Mode Engineering PDFKill dengan ribbon Ukur dan panel Takeoff"><img class="only-d" loading="lazy" src="img/engineering-dark.webp" width="1800" height="1125" alt="" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="engineering" class="band" aria-labelledby="h-eng">
-  <div class="wrap two">
-    <div class="sec-head" style="margin-bottom:0">
-      <div class="kick">Mode Engineering</div>
-      <h2 id="h-eng">Takeoff yang cepat, hasilnya bisa diperiksa</h2>
-      <p>Dibuat untuk estimator dan pelaksana yang bekerja dari PDF gambar kerja, termasuk hasil pindai yang miring.</p>
-      <div class="stat" style="margin-top:28px">
-        <div><b>3</b><span>mode kerja dalam satu aplikasi</span></div>
-        <div><b>.pkp</b><span>satu berkas berisi PDF dan data takeoff</span></div>
-        <div><b>ID + EN</b><span>OCR offline Indonesia dan Inggris</span></div>
-        <div><b>0</b><span>dokumen diunggah ke server</span></div>
+<section id="kerja" class="band" aria-labelledby="h-kerja">
+  <div class="wrap">
+    <div class="head rv"><div class="kick">Cara kerja</div><h2 id="h-kerja">Dari PDF ke rekap dalam tiga gerakan</h2><p>Skala, ukur, hitung. Hasilnya langsung masuk ke tabel rekap yang bisa Anda periksa dan ekspor.</p></div>
+    <div class="how rv">
+      <ol class="steps" id="steps">
+        <li data-n="1" class="on"><b>Atur skala</b><span>Tandai satu jarak yang diketahui, atau biarkan PDFKill membaca skala dari title block dan grid.</span><div class="prog"></div></li>
+        <li data-n="2"><b>Ukur luas dan panjang</b><span>Klik titik sudut ruangan. Luas muncul seketika dan bisa di-snap ke garis gambar.</span><div class="prog"></div></li>
+        <li data-n="3"><b>Hitung elemen</b><span>Tandai satu kolom, lalu cari yang serupa otomatis. Terima atau buang hasilnya.</span><div class="prog"></div></li>
+        <li data-n="4"><b>Rekap dan ekspor</b><span>Semua item tersusun di panel Takeoff. Ekspor ke CSV, Excel, atau laporan cetak.</span><div class="prog"></div></li>
+      </ol>
+      <div class="canvas" id="canvas" data-step="0" role="img" aria-label="Animasi: skala diatur, luas ruangan diukur, kolom dihitung, lalu rekap muncul">
+        <span class="cap-badge" id="badge">Skala 1 : 100</span>
+        <svg viewBox="0 0 600 420" aria-hidden="true">
+          <g class="g" opacity=".9">
+            <rect x="60" y="60" width="480" height="280"/>
+            <path d="M60 200h160M380 200h160M220 60v140M380 200v140M220 200v60" />
+          </g>
+          <g fill="#1b1e4b"><rect x="54" y="54" width="12" height="12"/><rect x="214" y="54" width="12" height="12"/><rect x="374" y="54" width="12" height="12"/><rect x="534" y="54" width="12" height="12"/><rect x="54" y="194" width="12" height="12"/><rect x="214" y="194" width="12" height="12"/><rect x="374" y="194" width="12" height="12"/><rect x="534" y="194" width="12" height="12"/><rect x="54" y="334" width="12" height="12"/><rect x="214" y="334" width="12" height="12"/><rect x="374" y="334" width="12" height="12"/><rect x="534" y="334" width="12" height="12"/></g>
+          <g class="tx" text-anchor="middle" opacity=".7"><text x="140" y="140">R. TIDUR 1</text><text x="300" y="140">R. TIDUR 2</text><text x="460" y="140">DAPUR</text><text x="140" y="290">R. KELUARGA</text><text x="300" y="290">KM / WC</text><text x="460" y="290">R. MAKAN</text></g>
+          <g class="a-scale">
+            <path class="draw g" style="--len:480;stroke:#e0482f;stroke-width:3" d="M60 378h480"/>
+            <path class="g" style="stroke:#e0482f;stroke-width:3" d="M60 368v20M540 368v20"/>
+            <text class="tx" x="300" y="402" text-anchor="middle" style="fill:#e0482f">24.000 mm</text>
+          </g>
+          <g class="a-area">
+            <polygon class="fill" points="68,208 212,208 212,332 68,332"/>
+            <polygon class="draw g" style="--len:540;stroke:#0a84ff;stroke-width:3" points="68,208 212,208 212,332 68,332 68,208"/>
+            <text class="tx" id="areaVal" x="140" y="276" text-anchor="middle" style="fill:#0a84ff;font-size:15px">0,00 m²</text>
+          </g>
+          <g class="a-count">
+            <circle style="--i:0" cx="60" cy="60" r="8"/><circle style="--i:1" cx="220" cy="60" r="8"/><circle style="--i:2" cx="380" cy="60" r="8"/><circle style="--i:3" cx="540" cy="60" r="8"/>
+            <circle style="--i:4" cx="60" cy="200" r="8"/><circle style="--i:5" cx="220" cy="200" r="8"/><circle style="--i:6" cx="380" cy="200" r="8"/><circle style="--i:7" cx="540" cy="200" r="8"/>
+            <circle style="--i:8" cx="60" cy="340" r="8"/><circle style="--i:9" cx="220" cy="340" r="8"/><circle style="--i:10" cx="380" cy="340" r="8"/><circle style="--i:11" cx="540" cy="340" r="8"/>
+          </g>
+        </svg>
+        <div class="sum" aria-hidden="true"><h4>Rekap item</h4><div><span><i style="background:#0a84ff"></i>Lantai</span><b>45,79 m&#178;</b></div><div><span><i style="background:#ff9f0a"></i>Kolom K1</span><b>12 ea</b></div><div><span><i style="background:#ff453a"></i>Dinding</span><b>74,67 m</b></div></div>
       </div>
     </div>
-    <div>
-      <div class="feat"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></div><div><h3>Skala dan ukur</h3><p>Kalibrasi skala, ukur panjang, luas, dan hitung. Snap ke garis gambar, Ortho dan Polar untuk sudut tepat.</p></div></div>
-      <div class="feat"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div><div><h3>Cari simbol otomatis</h3><p>Beri contoh satu elemen, PDFKill mencari yang serupa di halaman, lalu Anda terima atau buang hasilnya.</p></div></div>
-      <div class="feat"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8M8 9h8M8 15h5"/></svg></div><div><h3>Pindaian dan OCR</h3><p>Luruskan halaman miring, koreksi perspektif, kenali teks dan tag elemen seperti K1 atau KT1-1 tanpa internet.</p></div></div>
-      <div class="feat"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div><div><h3>Grid, koordinat, dan progres</h3><p>Deteksi as grid, koordinat lokal atau UTM, peta progres bertanggal, dan ruangan dari gambar.</p></div></div>
-      <div class="feat"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><div><h3>RAB dan ekspor</h3><p>Harga satuan, rekap per item, ekspor CSV dan Excel, serta laporan siap cetak.</p></div></div>
+  </div>
+</section>
+
+<section id="fitur" aria-labelledby="h-fitur">
+  <div class="wrap">
+    <div class="head rv"><div class="kick">Fitur</div><h2 id="h-fitur">Dibuat untuk estimator dan pelaksana</h2><p>Bekerja dari PDF gambar kerja, termasuk hasil pindai yang miring.</p></div>
+    <div class="grid g3">
+      <article class="card rv"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg></div><h3>Skala dan ukur</h3><p>Kalibrasi skala, ukur panjang, luas, dan hitung. Snap ke garis gambar, Ortho dan Polar untuk sudut tepat.</p></article>
+      <article class="card rv" style="--rd:60ms"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div><h3>Cari simbol otomatis</h3><p>Beri contoh satu elemen. PDFKill mencari yang serupa, lalu Anda terima atau buang hasilnya.</p></article>
+      <article class="card rv" style="--rd:120ms"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8M8 9h8M8 15h5"/></svg></div><h3>Pindaian dan OCR</h3><p>Luruskan halaman miring, koreksi perspektif, dan kenali teks serta tag seperti K1 atau KT1-1 tanpa internet.</p></article>
+      <article class="card rv"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div><h3>Grid dan koordinat</h3><p>Deteksi as grid, koordinat lokal atau UTM, dan ekspor titik ke CSV.</p></article>
+      <article class="card rv" style="--rd:60ms"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg></div><h3>Peta progres</h3><p>Tandai elemen yang selesai dengan tanggal, lalu ekspor rekap dan PDF progres.</p></article>
+      <article class="card rv" style="--rd:120ms"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div><h3>RAB dan ekspor</h3><p>Harga satuan, rekap per item, ekspor CSV dan Excel, serta laporan siap cetak.</p></article>
+    </div>
+    <div class="stats" style="margin-top:28px">
+      <div class="stat rv"><b data-count="3">0</b><span>mode kerja dalam satu aplikasi</span></div>
+      <div class="stat rv" style="--rd:60ms"><b data-count="1">0</b><span>berkas .pkp berisi PDF dan data</span></div>
+      <div class="stat rv" style="--rd:120ms"><b>ID + EN</b><span>OCR offline Indonesia dan Inggris</span></div>
+      <div class="stat rv" style="--rd:180ms"><b data-count="0">0</b><span>dokumen diunggah ke server</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="pkp" class="band" aria-labelledby="h-pkp">
+  <div class="wrap">
+    <div class="pkp">
+      <div class="rv">
+        <div class="kick">Proyek .pkp</div>
+        <h2 id="h-pkp" style="font-size:clamp(1.8rem,4.4vw,2.8rem);line-height:1.12;letter-spacing:-.025em;margin:0 0 14px;color:var(--label-primary)">Satu berkas. Klik ganda, langsung terbuka.</h2>
+        <p style="font-size:1.1rem;opacity:.88;margin:0 0 14px">Proyek Engineering tersimpan sebagai berkas <b>.pkp</b> yang memuat PDF dan seluruh data takeoff: item, ukuran, skala, dan progres. Kirim satu berkas ke rekan, tanpa lampiran terpisah.</p>
+        <p style="font-size:1rem;opacity:.85;margin:0">Ctrl+S menyimpan proyek dan tidak menimpa PDF asli.</p>
+      </div>
+      <div class="fly rv" role="img" aria-label="Animasi: berkas PDF dan data takeoff digabung menjadi satu berkas .pkp">
+        <div class="file fa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>Denah.pdf<small>Gambar kerja</small></div>
+        <div class="file fb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Data takeoff<small>Ukuran, skala, item</small></div>
+        <div class="file fc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 13v8"/></svg>Denah.pkp<small>Klik ganda untuk membuka</small></div>
+      </div>
+    </div>
+    <div class="menu-card">
+      <div class="menu-img rv"><img class="only-l" loading="lazy" src="img/menu-light.webp" width="680" height="800" alt="Menu utama PDFKill: pilihan mode Baca, Edit, Engineering, lalu Buka, Simpan, dan Pengaturan"><img class="only-d" loading="lazy" src="img/menu-dark.webp" width="680" height="800" alt="" aria-hidden="true"></div>
+      <div class="rv" style="--rd:80ms"><h3 style="font-size:1.6rem;letter-spacing:-.02em;margin:0 0 10px;color:var(--label-primary)">Mode ada di tombol logo</h3><p style="opacity:.88;margin:0 0 12px">Mode aktif ditandai dengan garis aksen. Pintasan <kbd>Ctrl</kbd> + <kbd>1</kbd>, <kbd>2</kbd>, <kbd>3</kbd> berpindah seketika, dan setiap dokumen mengingat modenya sendiri.</p><p style="opacity:.88;margin:0">Jendela terbuka maksimal agar gambar kerja langsung tampil lega.</p></div>
     </div>
   </div>
 </section>
 
 <section id="privasi" aria-labelledby="h-priv">
   <div class="wrap">
-    <div class="sec-head">
-      <div class="kick">Privasi</div>
-      <h2 id="h-priv">Gambar proyek Anda tidak keluar dari komputer</h2>
-      <p>Pembacaan, pengeditan, OCR, dan pencarian simbol berjalan lokal. Satu-satunya akses jaringan adalah pemeriksaan versi baru ke GitHub, dan aplikasi bertanya dulu sebelum memasang pembaruan.</p>
-    </div>
-    <div class="grid c3">
-      <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h3>Tanpa unggah</h3><p>Tidak ada akun, tidak ada server dokumen.</p></div>
-      <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5 10 17 19 7"/></svg></div><h3>Pemulihan otomatis</h3><p>Hasil edit yang belum tersimpan bisa dipulihkan setelah aplikasi tertutup mendadak.</p></div>
-      <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div><h3>Ringan</h3><p>Gulir virtual, jendela terbuka maksimal, dan riwayat urungkan dibatasi agar memori aman.</p></div>
+    <div class="head rv"><div class="kick">Privasi</div><h2 id="h-priv">Gambar proyek Anda tidak keluar dari komputer</h2><p>Pembacaan, pengeditan, OCR, dan pencarian simbol berjalan lokal. Satu-satunya akses jaringan adalah pemeriksaan versi baru ke GitHub, dan aplikasi bertanya dulu sebelum memasang pembaruan.</p></div>
+    <div class="grid g3">
+      <div class="card rv"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h3>Tanpa unggah</h3><p>Tidak ada akun, tidak ada server dokumen.</p></div>
+      <div class="card rv" style="--rd:60ms"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></div><h3>Pemulihan otomatis</h3><p>Hasil edit yang belum tersimpan bisa dipulihkan setelah aplikasi tertutup mendadak.</p></div>
+      <div class="card rv" style="--rd:120ms"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg></div><h3>Ringan</h3><p>Gulir virtual dan riwayat urungkan dibatasi agar memori tetap aman.</p></div>
     </div>
   </div>
 </section>
 
 <section id="unduh" class="band" aria-labelledby="h-unduh">
-  <div class="wrap two">
-    <div class="sec-head" style="margin-bottom:0">
+  <div class="wrap inst">
+    <div class="rv">
       <div class="kick">Mulai</div>
-      <h2 id="h-unduh">Pasang dalam tiga langkah</h2>
-      <p>Untuk Windows 10 dan 11, 64 bit.</p>
-      <div class="cta" style="margin-top:24px">
-        <a id="dl2" class="btn primary" href="https://github.com/roob360/pdfkill-releases/releases/latest">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 20h16"/></svg>
-          Unduh installer
-        </a>
-      </div>
+      <h2 id="h-unduh" style="font-size:clamp(1.8rem,4.4vw,2.8rem);line-height:1.12;letter-spacing:-.025em;margin:0 0 12px;color:var(--label-primary)">Pasang dalam tiga langkah</h2>
+      <p style="font-size:1.1rem;opacity:.88;margin:0 0 22px">Untuk Windows 10 dan 11, 64 bit.</p>
+      <a id="dl2" class="btn def" href="https://github.com/roob360/pdfkill-releases/releases/latest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 20h16"/></svg>Unduh installer</a>
       <p id="meta2" class="meta"></p>
     </div>
-    <ol class="steps">
+    <ol class="s2 rv" style="--rd:80ms">
       <li><b class="t">Unduh installer</b><span>Berkas bernama PDFKill_versi_x64-setup.exe.</span></li>
       <li><b class="t">Jalankan dan lewati peringatan</b><span>Installer belum bertanda tangan kode. Jika muncul "Windows protected your PC", pilih <b>More info</b>, lalu <b>Run anyway</b>.</span></li>
       <li><b class="t">Buka PDF atau berkas .pkp</b><span>Klik ganda berkas <b>.pkp</b> untuk membuka proyek takeoff langsung dengan PDF-nya.</span></li>
@@ -300,35 +439,34 @@ footer a { color: var(--mute); }
 
 <section id="faq" aria-labelledby="h-faq">
   <div class="wrap" style="max-width:820px">
-    <div class="sec-head"><div class="kick">Tanya jawab</div><h2 id="h-faq">Pertanyaan umum</h2></div>
+    <div class="head rv"><div class="kick">Tanya jawab</div><h2 id="h-faq">Pertanyaan umum</h2></div>
+    <div class="rv">
     <details><summary>Apakah PDFKill gratis?</summary><p>Ya. PDFKill berlisensi Apache-2.0. Daftar lisensi pustaka pihak ketiga ada di dalam aplikasi: menu utama, lalu Tentang PDFKill.</p></details>
     <details><summary>Apakah PDF saya diubah saat takeoff?</summary><p>Tidak. Di mode Engineering, Ctrl+S menyimpan proyek sebagai berkas .pkp yang memuat salinan PDF dan data pengukuran. PDF asli tidak ditimpa.</p></details>
     <details><summary>Bisakah memakai gambar hasil pindai atau foto?</summary><p>Bisa. PDFKill dapat meluruskan halaman miring, mengoreksi perspektif, mengenali teks dengan OCR offline, dan mengubah garis pindaian menjadi bentuk yang bisa di-snap. Hasil otomatis selalu ditampilkan untuk Anda periksa.</p></details>
     <details><summary>Bagaimana pembaruan bekerja?</summary><p>Saat dibuka, PDFKill memeriksa versi baru dan bertanya sebelum memasangnya. Bisa dimatikan di Pengaturan.</p></details>
     <details><summary>Apakah ada versi macOS atau Linux?</summary><p>Saat ini baru Windows.</p></details>
     <details><summary>Di mana kode sumbernya?</summary><p>Repo ini hanya berisi berkas rilis. Kode sumber tidak dipublikasikan.</p></details>
+    </div>
   </div>
 </section>
 
 <section class="band final" aria-labelledby="h-fin">
   <div class="wrap">
-    <h2 id="h-fin" style="font-size:clamp(1.7rem,4vw,2.4rem);margin:0 0 12px;letter-spacing:-.02em">Siap menghitung gambar kerja Anda?</h2>
-    <p style="color:var(--mute);margin:0 0 24px">Unduh PDFKill dan buka PDF pertama Anda.</p>
-    <div class="cta"><a id="dl3" class="btn primary" href="https://github.com/roob360/pdfkill-releases/releases/latest">Unduh untuk Windows</a></div>
+    <h2 id="h-fin" class="rv" style="font-size:clamp(1.8rem,4.4vw,2.7rem);letter-spacing:-.025em;margin:0 0 12px;color:var(--label-primary)">Siap menghitung gambar kerja Anda?</h2>
+    <p class="rv" style="opacity:.88;margin:0 0 24px">Unduh PDFKill dan buka PDF pertama Anda.</p>
+    <div class="ctas rv"><a id="dl3" class="btn def" href="https://github.com/roob360/pdfkill-releases/releases/latest">Unduh untuk Windows</a></div>
   </div>
 </section>
 </main>
 
-<footer>
-  <div class="wrap">
-    <span>&copy; PDFKill &middot; Apache-2.0</span>
-    <span><a href="https://github.com/roob360/pdfkill-releases/releases">Semua rilis</a></span>
-  </div>
-</footer>
+<footer><div class="wrap"><span>&copy; PDFKill &middot; Apache-2.0</span><span><a href="https://github.com/roob360/pdfkill-releases/releases">Semua rilis</a></span></div></footer>
 
 <script>
 (() => {
   const root = document.documentElement;
+  root.classList.add('js');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   try { const t = localStorage.getItem('pk-theme'); if (t) root.dataset.theme = t; } catch (e) {}
   document.getElementById('theme').addEventListener('click', () => {
     const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
@@ -337,6 +475,84 @@ footer a { color: var(--mute); }
     try { localStorage.setItem('pk-theme', next); } catch (e) {}
   });
 
+  /* tampil saat masuk layar */
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15, rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+  const shot = document.getElementById('heroShot');
+  const io2 = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { shot.classList.add('in'); io2.disconnect(); } }), { threshold: .3 });
+  io2.observe(shot);
+
+  /* jendela hero: miring lalu rata saat digulir */
+  const win = document.getElementById('heroWin');
+  if (!reduce) {
+    let ticking = false;
+    const upd = () => {
+      const r = win.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, 1 - r.top / (innerHeight * .75)));
+      win.style.transform = `rotateX(${(1 - p) * 9}deg) scale(${.94 + p * .06})`;
+      ticking = false;
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+    upd();
+  }
+
+  /* segmen mode */
+  const tabs = [...document.querySelectorAll('.seg [role=tab]')];
+  const setMode = (m) => {
+    tabs.forEach((t) => t.setAttribute('aria-selected', String(t.dataset.m === m)));
+    document.querySelectorAll('.mode-shots .layer').forEach((l) => l.classList.toggle('on', l.dataset.m === m));
+    document.querySelectorAll('.mode-copy .txt').forEach((l) => l.classList.toggle('on', l.dataset.m === m));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => setMode(t.dataset.m));
+    t.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      n.focus(); setMode(n.dataset.m);
+    });
+  });
+
+  /* motion graphic cara kerja */
+  const canvas = document.getElementById('canvas');
+  const steps = [...document.querySelectorAll('#steps li')];
+  const badge = document.getElementById('badge');
+  const area = document.getElementById('areaVal');
+  const badges = ['Skala 1 : 100', 'Ukur luas', 'Hitung: 12 kolom K1', 'Rekap item'];
+  const DUR = 3600;
+  let cur = -1, timer = null, running = false;
+  const countTo = (el, to, ms, fmt) => {
+    if (reduce) { el.textContent = fmt(to); return; }
+    const t0 = performance.now();
+    const f = (t) => { const k = Math.min(1, (t - t0) / ms); el.textContent = fmt(to * (1 - Math.pow(1 - k, 3))); if (k < 1 && cur === 1) requestAnimationFrame(f); };
+    requestAnimationFrame(f);
+  };
+  const go = (n) => {
+    cur = n;
+    steps.forEach((s, i) => { s.classList.toggle('on', i === n); s.style.setProperty('--dur', DUR + 'ms'); });
+    canvas.dataset.step = String(n);
+    badge.textContent = badges[n];
+    if (n === 1) countTo(area, 45.79, 1300, (v) => v.toFixed(2).replace('.', ',') + ' m²');
+    if (n === 0) area.textContent = '0,00 m²';
+  };
+  const loop = () => { go((cur + 1) % steps.length); };
+  const startLoop = () => { if (running) return; running = true; go(0); if (!reduce) timer = setInterval(loop, DUR); else go(3); };
+  const stopLoop = () => { running = false; clearInterval(timer); };
+  new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? startLoop() : stopLoop())), { threshold: .35 }).observe(canvas);
+  steps.forEach((s, i) => s.addEventListener('click', () => { stopLoop(); go(i); if (!reduce) { running = true; timer = setInterval(loop, DUR * 1.6); } }));
+
+  /* angka naik */
+  const cio = new IntersectionObserver((es) => es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const el = e.target, to = +el.dataset.count;
+    cio.unobserve(el);
+    if (reduce || to === 0) { el.textContent = to; return; }
+    const t0 = performance.now(), ms = 1400;
+    const f = (t) => { const k = Math.min(1, (t - t0) / ms); el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); };
+    requestAnimationFrame(f);
+  }), { threshold: .6 });
+  document.querySelectorAll('[data-count]').forEach((el) => cio.observe(el));
+
+  /* versi terbaru dari GitHub */
   const links = ['dl', 'dl2', 'dl3'].map((id) => document.getElementById(id));
   const metas = [document.getElementById('meta'), document.getElementById('meta2')];
   const say = (t) => metas.forEach((m) => { m.textContent = t; });
